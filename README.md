@@ -7,6 +7,7 @@ terraform playground for mail ru cloud solution
 • Создание LB из CLI (требуется установить дополнительный пакет https://docs.openstack.org/python-octaviaclient/latest/)
 • Эмуляция падения одной ноды\ЦОД-а (выключение 1 из ВМ) сервис при этом остается доступен
 .--------------------------------------------------------------------------------------------------------------------------
+
 Задание 2 (дополнительное):
 Создание той же инфраструктуры что из первого задания используя Infrastructure-as-Code (на примере Terraform)
 Пример: https://github.com/MailRuCloudSolutions/terraform-demo
