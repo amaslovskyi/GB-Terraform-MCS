@@ -44,7 +44,7 @@ variable "cidr" {
 variable "admin" {
   type        = string
   description = "admin access"
-  default     = "135.157.124.200/32"
+  default     = "133.158.125.207/32"
 }
 
 # Compute instance
