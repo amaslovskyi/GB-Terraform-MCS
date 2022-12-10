@@ -40,7 +40,7 @@ resource "vkcs_networking_secgroup_rule" "secgroup_rule_1" {
   port_range_max    = 22
   port_range_min    = 22
   protocol          = "tcp"
-  remote_ip_prefix  = "0.0.0.0/0"
+  remote_ip_prefix  = var.admin
   security_group_id = vkcs_networking_secgroup.secgroup.id
   description       = "sg for ssh access"
 }
