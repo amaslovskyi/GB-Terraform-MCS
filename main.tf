@@ -29,12 +29,6 @@ resource "vkcs_networking_router_interface" "compute" {
   router_id = vkcs_networking_router.compute.id
   subnet_id = vkcs_networking_subnet.compute.id
 }
-# db network describe
-# resource "vkcs_networking_router_interface" "db" {
-#   router_id = vkcs_networking_router.router.id
-#   subnet_id = vkcs_networking_subnet.subnetwork.id
-# }
-
 
 resource "vkcs_networking_secgroup" "secgroup" {
   name        = "security_group"
@@ -43,7 +37,6 @@ resource "vkcs_networking_secgroup" "secgroup" {
 
 resource "vkcs_networking_secgroup_rule" "secgroup_rule_1" {
   direction = "ingress"
-  #ethertype         = "IPv4"
   port_range_max    = 22
   port_range_min    = 22
   protocol          = "tcp"
@@ -54,7 +47,6 @@ resource "vkcs_networking_secgroup_rule" "secgroup_rule_1" {
 
 resource "vkcs_networking_secgroup_rule" "secgroup_rule_2" {
   direction = "ingress"
-  #ethertype         = "IPv4"
   port_range_max    = 80
   port_range_min    = 80
   remote_ip_prefix  = "0.0.0.0/0"
@@ -65,7 +57,6 @@ resource "vkcs_networking_secgroup_rule" "secgroup_rule_2" {
 
 resource "vkcs_networking_secgroup_rule" "secgroup_rule_3" {
   direction = "ingress"
-  #ethertype         = "IPv4"
   port_range_max    = 443
   port_range_min    = 443
   remote_ip_prefix  = "0.0.0.0/0"
@@ -74,33 +65,11 @@ resource "vkcs_networking_secgroup_rule" "secgroup_rule_3" {
   description       = "sg for https access"
 }
 
-# resource "vkcs_networking_port" "port" {
-#   name = "port_1"
-#   admin_state_up = "true"
-#   network_id = vkcs_networking_network.network.id
+### Describe Compute instance ###
 
-#   fixed_ip {
-#     subnet_id =  vkcs_networking_subnet.subnetwork.id
-#     ip_address = "192.168.199.23"
-#   }
-# }
-
-# resource "vkcs_networking_port_secgroup_associate" "port" {
-#   port_id = vkcs_networking_port.port.id
-#   enforce = "false"
-#   security_group_ids = [
-#     vkcs_networking_secgroup.secgroup.id,
-#   ]
-# }
-
-### Describe Copute instance ###
 data "vkcs_compute_flavor" "compute" {
   name = "Basic-1-1-10"
 }
-
-# resource "vkcs_compute_flavor" "compute2" {
-#   name = var.ci-name2
-# }
 
 resource "vkcs_compute_instance" "compute1" {
   name              = var.ci-name1
@@ -119,15 +88,6 @@ resource "vkcs_compute_instance" "compute1" {
     boot_index            = 0
     delete_on_termination = true
   }
-
-  #   block_device {
-  #     source_type           = "blank"
-  #     destination_type      = "volume"
-  #     volume_type           = "ceph-ssd"
-  #     volume_size           = 10
-  #     boot_index            = 1
-  #     delete_on_termination = true
-  #   }
 
   network {
     uuid        = vkcs_networking_network.compute.id
@@ -158,15 +118,6 @@ resource "vkcs_compute_instance" "compute2" {
     delete_on_termination = true
   }
 
-  #   block_device {
-  #     source_type           = "blank"
-  #     destination_type      = "volume"
-  #     volume_type           = "ceph-ssd"
-  #     volume_size           = 10
-  #     boot_index            = 1
-  #     delete_on_termination = true
-  #   }
-
   network {
     uuid        = vkcs_networking_network.compute.id
     fixed_ip_v4 = "192.168.10.14"
@@ -177,6 +128,8 @@ resource "vkcs_compute_instance" "compute2" {
     vkcs_networking_subnet.compute
   ]
 }
+
+### added elastic ips for instances
 
 resource "vkcs_networking_floatingip" "fip1" {
   pool = data.vkcs_networking_network.extnet.name
@@ -196,30 +149,13 @@ resource "vkcs_compute_floatingip_associate" "fip2" {
   instance_id = vkcs_compute_instance.compute2.id
 }
 
-
-# data "vkcs_networking_network" "extnet" {
-#   name = "var.ext-net"
-# }
+### instance ami
 
 data "vkcs_images_image" "compute" {
   name = "Ubuntu-18.04-Standard"
 }
 
-# resource "vkcs_networking_network" "compute" {
-#   name = var.net
-# }
-
-# resource "vkcs_networking_subnet" "compute" {
-#   name       = "subnet_1"
-#   network_id = vkcs_networking_network.compute.id
-#   cidr       = var.cidr
-# }
-
-# resource "vkcs_networking_router" "compute" {
-#   name                = "db-router"
-#   admin_state_up      = true
-#   external_network_id = data.vkcs_networking_network.extnet.id
-# }
+### Load balancer describe
 
 resource "vkcs_lb_loadbalancer" "loadbalancer" {
   name          = "loadbalancer"
