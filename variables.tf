@@ -1,13 +1,13 @@
 # credentials
 variable "username" {
   type        = string
-  default     = "fg.adminus@gmail.com"
+  default     = ""
   description = "login"
 }
 
 variable "passwd" {
   type        = string
-  default     = "ctr%bU6jQmw*3C"
+  default     = ""
   description = "pass"
 }
 
